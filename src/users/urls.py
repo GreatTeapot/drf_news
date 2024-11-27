@@ -11,7 +11,7 @@ router.register(prefix='', viewset=users.CustomUserViewSet, basename='users')
 router.register(prefix=r'search', viewset=users.UserListSearchView, basename='users-search')
 
 urlpatterns = [
-    path('auth/jwt/create/', auth.CustomTokenObtainPairView.as_view(), name='jwt-create'),
+    path('auth/login/', auth.CustomTokenObtainPairView.as_view(), name='jwt-create'),
     path('auth/jwt/refresh/', auth.CustomTokenRefreshView.as_view(), name='jwt-refresh'),
     path('auth/jwt/verify/', auth.CustomTokenVerifyView.as_view(), name='jwt-verify'),
 ]

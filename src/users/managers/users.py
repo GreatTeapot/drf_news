@@ -5,6 +5,7 @@ from typing import Union, Optional, TYPE_CHECKING
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from rest_framework.exceptions import ParseError
+from users.jwt.tokens import *
 
 if TYPE_CHECKING:
     User = get_user_model()
@@ -37,7 +38,6 @@ class CustomUserManager(BaseUserManager):
             **extra_fields: Optional[str]
     ) -> User:
         """Проверка данных пользователя, суперпользователя."""
-        # Проверка на то что мы заполнили данные.
         if not (email or phone_number or username):
             raise ParseError('Укажите email или телефон')
 
@@ -75,24 +75,24 @@ class CustomUserManager(BaseUserManager):
         return self.__create_user(
             phone_number, email, password, username, **extra_fields
         )
-    def create_author(self, **kwargs):
-        pass
-        
+
+
+
     def create_superuser(
-            self,
-            email: Optional[str] = None,
-            phone_number: Optional[str] = None,
-            password: Optional[str] = None,
-            username: Optional[str] = None,
-            **extra_fields: Union[str, bool]
-    ) -> User:
-        """Создание супер-пользователя."""
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+                self,
+                email: Optional[str] = None,
+                phone_number: Optional[str] = None,
+                password: Optional[str] = None,
+                username: Optional[str] = None,
+                **extra_fields: Union[str, bool]
+        ) -> User:
+            """Создание супер-пользователя."""
+            extra_fields.setdefault('is_superuser', True)
+            extra_fields.setdefault('is_active', True)
 
-        if not extra_fields.get('is_superuser'):
-            raise ValueError('is_superuser must be True')
+            if not extra_fields.get('is_superuser'):
+                raise ValueError('is_superuser must be True')
 
-        return self.__create_user(
-            phone_number, email, password, username, **extra_fields
-        )
+            return self.__create_user(
+                phone_number, email, password, username, **extra_fields
+            )

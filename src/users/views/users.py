@@ -75,14 +75,14 @@ class CustomUserViewSet(mixins.ExtendedUserViewSet):
     permission_classes = (djoser_permissions.CurrentUserOrAdmin,)
     multi_permission_classes = {
         'registration': (permissions.AllowAny,),
-        'activation': (permissions.AllowAny,),
+        # 'activation': (permissions.AllowAny,),
         'edit_role': (permissions.IsAdminUser,),
     }
 
     serializer_class = user_s.UserSerializer
     multi_serializer_class = {
         'registration': user_s.RegistrationSerializer,
-        'activation': user_s.CustomActivationSerializer,
+        # 'activation': user_s.CustomActivationSerializer,
         'change_password': user_s.ChangePasswordSerializer,
         'reset_password': user_s.PasswordResetSerializer,
         'reset_password_confirm': user_s.CustomPasswordResetConfirmSerializer,
@@ -103,27 +103,28 @@ class CustomUserViewSet(mixins.ExtendedUserViewSet):
         """Выполнить задание по отправке сообщения о создании пользователя."""
         with transaction.atomic():
             user = serializer.save(**kwargs)
-            context = get_context(user, self.request, settings.SEND_ACTIVATION_EMAIL)
+            context = get_context(user, self.request, settings.EMAIL_HOST_USER)
             registration = users_services.UserRegistrationService(user, context)
             registration.execute()
 
     @action(methods=['POST'], detail=False)
     def registration(
             self, request: Request, *args: None, **kwargs: None
-    ) -> Response:
+    ):
         """Метод регистрации."""
         return self.create(request, *args, **kwargs)
 
-    @action(methods=['POST'], detail=False)
-    def activation(self, request: Request, *args: None, **kwargs: None) -> Response:
-        """Метод для активации пользователя."""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.user
-        context = get_context(user, request, settings.SEND_CONFIRMATION_EMAIL)
-        activation = users_services.UserActivationService(user, context)
-        activation.execute()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    #
+    # @action(methods=['POST'], detail=False)
+    # def activation(self, request: Request, *args: None, **kwargs: None) -> Response:
+    #     """Метод для активации пользователя."""
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     user = serializer.user
+    #     context = get_context(user, request, settings.SEND_CONFIRMATION_EMAIL)
+    #     activation = users_services.UserActivationService(user, context)
+    #     activation.execute()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['POST'], detail=False)
     def change_password(self, request: Request) -> Response:
@@ -198,5 +199,5 @@ class UserListSearchView(mixins.ListViewSet):
     queryset = User.objects.exclude(is_superuser=True)
     serializer_class = user_s.UserListSearchSerializer
     filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('first_name', 'last_name', 'email', 'username')
+    # search_fields = ('first_name', 'last_name', 'email', 'username')
     ordering = ('username', '-id')

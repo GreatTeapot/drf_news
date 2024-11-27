@@ -44,6 +44,8 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    is_staff = None
+
 
     objects = CustomUserManager()
 

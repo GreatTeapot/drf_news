@@ -4,10 +4,12 @@ from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
+from djoser import serializers as djoser_serializers
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
+from rest_framework.response import Response
 
-from djoser import serializers as djoser_serializers
+from users.jwt.tokens import generate_tokens, add_tokens_to_response
 from users.models.profile import Profile
 from users.serializers.nested.profile import ProfileShortSerializer, ProfileUpdateSerializer
 
@@ -27,7 +29,7 @@ class RegistrationSerializer(djoser_serializers.UserCreateSerializer):
 
     class Meta(djoser_serializers.UserCreateSerializer.Meta):
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+        fields = ('id', 'first_name', 'last_name', 'username','email', 'password', )
 
     @staticmethod
     def validate_email(value: str) -> str:
@@ -36,6 +38,15 @@ class RegistrationSerializer(djoser_serializers.UserCreateSerializer):
         if User.objects.filter(email=email).exists():
             raise ParseError('A user with this email is already registered.')
         return email
+
+    # def create(self, validated_data):
+    #     """Creating user with jwt tokens in cookies"""
+    #     user = super().create(validated_data)
+    #     access_token, refresh_token = generate_tokens(user)
+    #
+    #     response = Response("Регистрация прошла успешно.")
+    #     add_tokens_to_response(response, access_token, refresh_token)
+    #     return response
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,10 +69,10 @@ class UserSerializer(serializers.ModelSerializer):
             'date_joined',
         )
 
-
-class CustomActivationSerializer(djoser_serializers.ActivationSerializer):
-    """Serializer for activation user"""
-    pass
+#
+# class CustomActivationSerializer(djoser_serializers.ActivationSerializer):
+#     """Serializer for activation user"""
+#     pass
 
 
 
@@ -181,9 +192,14 @@ class UserUpdateRoleSerializer(serializers.ModelSerializer):
 
 class UserListSearchSerializer(serializers.ModelSerializer):
     """Сериализатор поиска пользователей."""
-
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'full_name')
+        fields = ('id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'username',
+            'is_active',)
 
 #

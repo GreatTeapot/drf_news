@@ -38,46 +38,45 @@ class UserRegistrationService(UserSignalActivationService):
         super().__init__(user)
         self._context = context
 
-    def _send_email_user_registration(self) -> None:
-        """Send an email about user registration."""
-        tasks.send_registration_task.delay(self._context, [self._user.email])
+
+    def _send_welcome_email(self) -> None:
+        """Send welcome email"""
+        tasks.send_welcome_email_task.delay(self._user.email)
 
     def execute(self) -> None:
-        """Execute user registration."""
-        self.signal_user_activation()
-        if settings.SEND_ACTIVATION_EMAIL:
-            self._send_email_user_registration()
+        """Running"""
+        self._send_welcome_email()
 
-
-class UserActivationService(UserSignalActivationService):
-    """Service for handling user activation."""
-
-    def __init__(self, user: User, context: Optional[dict[str, Union[str, int]]]) -> None:
-        """Initialize the user activation service."""
-        super().__init__(user)
-        self._context = context
-
-    def _user_is_active(self) -> None:
-        """Mark the user as active."""
-        self._user.is_active = True
-
-    def _user_save(self) -> None:
-        """Save the user."""
-        self._user.save()
-
-    def _send_email_user_activation(self):
-        """Send an email about user activation."""
-        tasks.send_activation_task.delay(self._context, [self._user.email])
-
-    def execute(self) -> None:
-        """Execute user activation."""
-        with transaction.atomic():
-            self._user_is_active()
-            self._user_save()
-
-        self.signal_user_activation()
-        if settings.SEND_CONFIRMATION_EMAIL:
-            self._send_email_user_activation()
+#
+# class UserActivationService(UserSignalActivationService):
+#     """Service for handling user activation."""
+#
+#     def __init__(self, user: User, context: Optional[dict[str, Union[str, int]]]) -> None:
+#         """Initialize the user activation service."""
+#         super().__init__(user)
+#         self._context = context
+#
+#     def _user_is_active(self) -> None:
+#         """Mark the user as active."""
+#         self._user.is_active = True
+#
+#     def _user_save(self) -> None:
+#         """Save the user."""
+#         self._user.save()
+#
+#     def _send_email_user_activation(self):
+#         """Send an email about user activation."""
+#         tasks.send_activation_task.delay(self._context, [self._user.email])
+#
+#     def execute(self) -> None:
+#         """Execute user activation."""
+#         with transaction.atomic():
+#             self._user_is_active()
+#             self._user_save()
+#
+#         self.signal_user_activation()
+#         if settings.SEND_CONFIRMATION_EMAIL:
+#             self._send_email_user_activation()
 
 
 class UserResetPasswordService:

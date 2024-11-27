@@ -1,5 +1,8 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework.response import Response
 from rest_framework_simplejwt import views
+
+from users.jwt.tokens import add_tokens_to_response
 
 
 @extend_schema_view(
@@ -10,7 +13,15 @@ from rest_framework_simplejwt import views
 )
 class CustomTokenObtainPairView(views.TokenObtainPairView):
     """Представление для создания токена."""
-    pass
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        tokens = response.data
+        access_token = tokens.get('access')
+        refresh_token = tokens.get('refresh')
+
+        custom_response = Response("Вход выполнен успешно")
+        add_tokens_to_response(custom_response, access_token, refresh_token)
+        return custom_response
 
 
 @extend_schema_view(

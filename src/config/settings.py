@@ -205,6 +205,8 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 # region ----------------------- DJOSER AND SIMPLE JWT-------------------------------
 SIMPLE_JWT = {
+    'AUTH_COOKIE': 'access_token',
+    'REFRESH_COOKIE': 'refresh_token',
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int('ACCESS_TOKEN_LIFETIME')),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int('REFRESH_TOKEN_LIFETIME')),
     'ROTATE_REFRESH_TOKENS': True,
