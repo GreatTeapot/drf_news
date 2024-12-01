@@ -16,7 +16,6 @@ urlpatterns = [
     path('auth/jwt/verify/', auth.CustomTokenVerifyView.as_view(), name='jwt-verify'),
 ]
 
-# Проверка на разрешенные конечные точки.
 selected_user_routes = list(filter(is_route_selected, router.urls))
 
 urlpatterns += (path('users/', include(selected_user_routes)),)

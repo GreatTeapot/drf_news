@@ -22,7 +22,7 @@ def send_welcome_email_task(
     try:
         subject = "Welcome to our website!"
         message = "Thank you for registering with our website!"
-        from_email = str(settings.EMAIL_HOST_USER)
+        from_email = str(settings.EMAIL_HOST)
 
         from django.core.mail import send_mail
         send_mail(subject, message, from_email, [email])

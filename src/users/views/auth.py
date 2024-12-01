@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt import views
 
@@ -19,7 +20,7 @@ class CustomTokenObtainPairView(views.TokenObtainPairView):
         access_token = tokens.get('access')
         refresh_token = tokens.get('refresh')
 
-        custom_response = Response("Вход выполнен успешно")
+        custom_response = Response("Login Successful")
         add_tokens_to_response(custom_response, access_token, refresh_token)
         return custom_response
 

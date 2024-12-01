@@ -23,8 +23,8 @@ class User(AbstractUser):
         verbose_name='Username',
         max_length=32,
         unique=True,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
     role = models.CharField(
         verbose_name='User Role',

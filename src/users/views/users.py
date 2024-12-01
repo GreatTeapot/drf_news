@@ -3,6 +3,7 @@ from typing import TypeAlias
 from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from djoser.conf import settings
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import permissions, status, authentication
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -12,8 +13,7 @@ from rest_framework.decorators import action
 from rest_framework_simplejwt import authentication as jwt_authentication
 
 from djoser import permissions as djoser_permissions
-from djoser.conf import settings
-
+from config import settings as app_settings
 from common.views import mixins
 from users.serializers.api import users as user_s
 from users.services import users as users_services
@@ -103,7 +103,7 @@ class CustomUserViewSet(mixins.ExtendedUserViewSet):
         """Выполнить задание по отправке сообщения о создании пользователя."""
         with transaction.atomic():
             user = serializer.save(**kwargs)
-            context = get_context(user, self.request, settings.EMAIL_HOST_USER)
+            context = get_context(user, self.request, app_settings.EMAIL_HOST_USER)
             registration = users_services.UserRegistrationService(user, context)
             registration.execute()
 

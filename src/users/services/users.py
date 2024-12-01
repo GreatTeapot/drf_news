@@ -18,7 +18,7 @@ class UserSignalActivationService:
     """Service for handling user activation signals."""
 
     def __init__(self, user: User) -> None:
-        """Initialize the user activation signal service."""
+        """Initialize the user activation signal services."""
         self._user = user
 
     def signal_user_activation(self) -> None:
@@ -34,7 +34,7 @@ class UserRegistrationService(UserSignalActivationService):
     """Service for handling user registration."""
 
     def __init__(self, user: User, context: Optional[dict[str, Union[str, int]]]) -> None:
-        """Initialize the user registration service."""
+        """Initialize the user registration services."""
         super().__init__(user)
         self._context = context
 
@@ -52,7 +52,7 @@ class UserRegistrationService(UserSignalActivationService):
 #     """Service for handling user activation."""
 #
 #     def __init__(self, user: User, context: Optional[dict[str, Union[str, int]]]) -> None:
-#         """Initialize the user activation service."""
+#         """Initialize the user activation services."""
 #         super().__init__(user)
 #         self._context = context
 #
@@ -83,7 +83,7 @@ class UserResetPasswordService:
     """Service for requesting a new password."""
 
     def __init__(self, user: User, context: Optional[dict[str, Union[str, int]]]) -> None:
-        """Initialize the password reset service."""
+        """Initialize the password reset services."""
         self._user = user
         self._context = context
 
@@ -106,7 +106,7 @@ class UserResetPasswordConfirmService:
         serializer: CustomPasswordResetConfirmSerializer,
         context: Optional[dict[str, Union[str, int]]],
     ) -> None:
-        """Initialize the password reset confirmation service."""
+        """Initialize the password reset confirmation services."""
         self._user = user
         self._serializer = serializer
         self._context = context
