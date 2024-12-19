@@ -1,31 +1,31 @@
+
 # ------------------------------------- INIT ----------------------------------------
+
 .PHONY: init
 init:
-# Установка виртуального окружения.
+# Set up a virtual environment.
 	python -m venv venv
-# Активация виртуального окружения.
+# Activate the virtual environment.
 	source venv/bin/activate
-# Установка зависимостей проекта.
+# Install project dependencies.
 	pip install -r requirements.txt
 # -----------------------------------------------------------------------------------
 
-
 # ----------------------------- MIGRATIONS AND STATIC -------------------------------
-# Применить миграции и отправить.
+# Apply migrations and execute them.
 .PHONY: migrations
 migrations:
 	python ./manage.py makemigrations
 	python ./manage.py migrate
 
-# Сбор статик файлов.
+# Collect static files.
 .PHONY: static
 static:
 	python ./manage.py collectstatic
 # -----------------------------------------------------------------------------------
 
-
 # ----------------------------------- LOAD DATA -------------------------------------
-# Загрузить данные в базу данных.
+# Load data into the database.
 .PHONY: load
 load:
 	python ./manage.py loaddata fixtures/categories.json
@@ -36,37 +36,33 @@ load:
 	python ./manage.py loaddata fixtures/products_images.json
 # -----------------------------------------------------------------------------------
 
-
 # ------------------------------------- SUPERUSER -----------------------------------
-# Создание суперпользователя.
+# Create a superuser.
 .PHONY: createsuperuser
 createsuperuser:
 	python ./manage.py createsuperuser
 # -----------------------------------------------------------------------------------
 
-
 # ------------------------------ RUN AND STOP SERVER --------------------------------
-# Запуск сервера разработки.
+# Start the development server.
 .PHONY: run
 run:
 	python manage.py runserver
 
-# Остановка сервера разработки.
+# Stop the development server.
 .PHONY: stop
 stop:
 	pkill -f "python ./manage.py runserver"
 # -----------------------------------------------------------------------------------
 
-
 # ------------------------------------- CELERY --------------------------------------
-# Запустить Celery. Убедитесь в том, что у вас запущен Redis (на WSL2, если
-# у вас Windows) и RabbitMQ на вашем локальном хосте!
+# Start Celery. Maksde sure you have Redis running (on WSL2 if you're on Windows)
+# and RabbitMQ is running on your local host!
 .PHONY: celery
 celery:
 	celery --app=config worker --loglevel=info --pool=solo
 
-# Запустить Celery Beat для резервной копии Базы Данных.
+# Start Celery Beat for database backups.
 .PHONY: beat
 beat:
 	celery -A config beat -l info
-# -----------------------------------------------------------------------------------
