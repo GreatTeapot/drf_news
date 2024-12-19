@@ -135,8 +135,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # region --------------------------- LOCALIZATION -----------------------------------
-LANGUAGE_CODE = 'ru-RU'
-TIME_ZONE = 'Europe/Moscow'
+LANGUAGE_CODE = 'en-US'
+TIME_ZONE = 'America/New_York'
 USE_I18N = True
 USE_TZ = True
 # endregion -------------------------------------------------------------------------
@@ -160,8 +160,8 @@ CSRF_COOKIE_SECURE = False
 
 # region ------------------------ DRF SPECTACULAR -----------------------------------
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Online Store',
-    'DESCRIPTION': 'Online Store',
+    'TITLE': 'News Store',
+    'DESCRIPTION': 'News Store',
     'VERSION': '1.0.0',
 
     'SERVE_PERMISSIONS': [
@@ -191,7 +191,7 @@ SPECTACULAR_SETTINGS = {
 
 # region ------------------------------ SMTP ----------------------------------------
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# Настройка почтового сервера по SMTP-протоколу
+# SMTP mail server configuration
 EMAIL_HOST = env.str(var='EMAIL_HOST')
 EMAIL_PORT = env.int(var='EMAIL_PORT')
 EMAIL_USE_TLS = env.bool(var='EMAIL_USE_TLS')
@@ -257,7 +257,7 @@ AUTHENTICATION_BACKENDS = ('users.backends.AuthBackend',)
 
 # region ------------------------------- REDIS --------------------------------------
 REDIS_URL = env.str(var='REDIS_URL', default='redis://localhost:6379/0')
-# Кэш с помощью => Redis.
+# Caching using => Redis.
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
@@ -271,9 +271,9 @@ RABBIT_URL = env.str(var='RABBITMQ_URL', default='amqp://guest:guest@localhost:5
 # endregion -------------------------------------------------------------------------
 
 # region ------------------------------- CELERY -------------------------------------
-# Использование брокера сообщений для Celery на базе RabbitMQ.
+# Using a message broker for Celery based on RabbitMQ.
 CELERY_BROKER_URL = RABBIT_URL
-# Использование БД для Celery на базе Redis.
+# Using a database for Celery backed by Redis.
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_TASK_TRACK_STARTED = env.bool(var='CELERY_TASK_TRACK_STARTED', default=False)
 CELERY_TASK_TIME_LIMIT = 30 * 60
@@ -282,12 +282,12 @@ result_serializer = env.str(var='RESULT_SERIALIZER', default='json')
 task_serializer = env.str(var='TASK_SERIALIZER', default='json')
 timezone = env.str(var='TIMEZONE', default='Europe/Moscow')
 
-# Резервная копия Базы Данных с помощью => Celery Beat.
+# Database backup using => Celery Beat.
 CELERY_BEAT_SCHEDULE = {
     'backup_database': {
-        # Путь к задаче указанной в tasks.py
+        # Path to the task specified in tasks.py
         'task': 'common.tasks.db_backup_task',
-        # Резервная копия будет создаваться каждый день в полночь
+        # A backup will be created every day at midnight
         'schedule': crontab(hour='0', minute='0'),
     },
 }

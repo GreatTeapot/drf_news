@@ -1,3 +1,4 @@
+
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import status
 from rest_framework.response import Response
@@ -8,12 +9,12 @@ from users.jwt.tokens import add_tokens_to_response
 
 @extend_schema_view(
     post=extend_schema(
-        summary='Создание токена',
+        summary='Token creation',
         tags=['Аутентификация'],
     ),
 )
 class CustomTokenObtainPairView(views.TokenObtainPairView):
-    """Представление для создания токена."""
+    """View for creating a token."""
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         tokens = response.data
@@ -27,21 +28,21 @@ class CustomTokenObtainPairView(views.TokenObtainPairView):
 
 @extend_schema_view(
     post=extend_schema(
-        summary='Обновление токена',
+        summary='Token refresh',
         tags=['Аутентификация'],
     ),
 )
 class CustomTokenRefreshView(views.TokenRefreshView):
-    """Представление для обновления токена."""
+    """View for refreshing a token."""
     pass
 
 
 @extend_schema_view(
     post=extend_schema(
-        summary='Проверка токена',
+        summary='Token verification',
         tags=['Аутентификация'],
     ),
 )
 class CustomTokenVerifyView(views.TokenVerifyView):
-    """Представление проверки токена."""
+    """View for verifying a token."""
     pass

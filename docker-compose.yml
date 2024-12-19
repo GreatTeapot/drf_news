@@ -1,0 +1,72 @@
+
+services:
+
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    container_name: news-store
+    volumes:
+      - ./:/usr/src/app/
+      - /src/static/:/usr/src/app/src/static/
+      - /src/media/:/usr/src/app/src/media/
+    ports:
+      - "8000:8000"
+    env_file:
+      - src/.env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:latest
+    container_name: db-store
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - src/.env
+
+  redis:
+    image: redis:latest
+    container_name: redis-store
+    volumes:
+      - redis_data:/data/
+    env_file:
+      - src/.env
+
+  celery:
+    build:
+      context: ./src
+    command: ['celery', '--app=config', 'worker', '--loglevel=info', '--pool=solo']
+    volumes:
+      - ./:/usr/src/app/
+    container_name: celery-store
+    env_file:
+      - src/.env
+    environment:
+      - RESULT_BACKEND=${REDIS_URL}
+    depends_on:
+      - db
+      - redis
+      - web
+
+  celery-beat:
+    build:
+      context: ./src
+    command: ['celery', '-A', 'config', 'beat', '-l', 'info']
+    volumes:
+      - ./:/usr/src/app/
+    container_name: celery-beat-store
+    depends_on:
+      - web
+      - db
+      - redis
+      - celery
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    driver: bridge

@@ -9,9 +9,9 @@ if TYPE_CHECKING:
 
 def is_route_selected(url_pattern: URLPattern) -> bool:
     """
-    Проверка на выбранную конечную точку.
-    Если есть точки, которые входят в неразрешенный список (unauthorised_urls),
-    то они не будут отображаться на схеме.
+    Check for the selected endpoint.
+    If there are points that are in the unauthorized list (unauthorised_urls),
+    they will not appear in the schema.
     """
     unauthorised_urls = (
         '',
@@ -31,7 +31,7 @@ def is_route_selected(url_pattern: URLPattern) -> bool:
 def get_context(
         user: User, request: Request, send_email: bool
 ) -> Optional[dict[str, Union[str, int]]]:
-    """Получить контекст для отправки электронного письма."""
+    """Get the context for sending an email."""
     if send_email:
         context = {
             'user_id': user.pk,

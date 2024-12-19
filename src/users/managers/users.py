@@ -5,7 +5,6 @@ from typing import Union, Optional, TYPE_CHECKING
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from rest_framework.exceptions import ParseError
-from users.jwt.tokens import *
 
 if TYPE_CHECKING:
     User = get_user_model()
@@ -13,10 +12,10 @@ if TYPE_CHECKING:
 
 class CustomUserManager(BaseUserManager):
     """
-    Кастомный менеджер пользователей.
-
-    Аттрибуты:
-        * `use_in_migrations` (bool): использование в миграциях.
+    Custom user manager.
+    
+    Attributes:
+        * `use_in_migrations` (bool): usage in migrations.
     """
 
     use_in_migrations = True
@@ -26,7 +25,7 @@ class CustomUserManager(BaseUserManager):
             email: str,
             phone_number: str
     ) -> Optional[str]:
-        """Проверка есть ли почта либо номер телефона."""
+        """Check if email or phone number is provided."""
         return email or phone_number
 
     def __create_user(
@@ -37,9 +36,9 @@ class CustomUserManager(BaseUserManager):
             username: Optional[str] = None,
             **extra_fields: Optional[str]
     ) -> User:
-        """Проверка данных пользователя, суперпользователя."""
+        """Validate user or superuser data."""
         if not (email or phone_number or username):
-            raise ParseError('Укажите email или телефон')
+            raise ParseError('Specify email or phone number')
 
         if email:
             email = self.normalize_email(email)
@@ -68,7 +67,7 @@ class CustomUserManager(BaseUserManager):
             username: Optional[str] = None,
             **extra_fields: Union[str, bool],
     ) -> User:
-        """Создание пользователя."""
+        """Create a user."""
         extra_fields.setdefault('is_superuser', False)
         extra_fields.setdefault('is_active', True)
 
@@ -86,7 +85,7 @@ class CustomUserManager(BaseUserManager):
                 username: Optional[str] = None,
                 **extra_fields: Union[str, bool]
         ) -> User:
-            """Создание супер-пользователя."""
+            """Create a superuser."""
             extra_fields.setdefault('is_superuser', True)
             extra_fields.setdefault('is_active', True)
 

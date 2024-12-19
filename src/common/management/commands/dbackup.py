@@ -5,14 +5,14 @@ from django.core.management import BaseCommand, call_command
 
 class Command(BaseCommand):
     """
-    Command for backup
+    Command for creating backups
     """
 
     def handle(self, *args, **options):
         """
-        Метод для запуска пользовательской команды.
+        Method to run a custom command.
         """
-        self.stdout.write('Ожидание копии базы данных')
+        self.stdout.write('Waiting for database copy')
         call_command(
             'dumpdata',
             '--natural-foreign',
@@ -23,5 +23,5 @@ class Command(BaseCommand):
             f'--output=database-{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.json',
         )
         self.stdout.write(
-            self.style.SUCCESS('Успешное резервное копирование базы данных')
+            self.style.SUCCESS('Database backup created successfully')
         )

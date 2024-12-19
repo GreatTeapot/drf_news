@@ -7,16 +7,15 @@ from rest_framework.request import Request
 User = get_user_model()
 
 
-# TODO: В чтобы работало, под конец проекта раскомментировать в settings.py MIDDLEWARE
+# TODO: To make this work, uncomment in settings.py MIDDLEWARE at the end of the project.
 
 class ActiveUserMiddleware(MiddlewareMixin):
-    """Класс для реализации функционала статуса покупателя: В сети/Не в сети."""
+    """Class for implementing the functionality of customer status: Online/Offline."""
 
     @staticmethod
     def process_request(request: Request) -> None:
         """
-        Проверка на авторизацию пользователя, и имеет
-        ли его сессия уникальный идентификатор session_key.
+        Checks if the user is authenticated and whether their session has a unique session_key.
         """
         if request.user.is_authenticated and request.session.session_key:
             cache_key = f'last-seen-{request.user.id}'
@@ -26,6 +25,6 @@ class ActiveUserMiddleware(MiddlewareMixin):
                 User.objects.filter(pk=request.user.id).update(
                     last_login=timezone.now()
                 )
-                # Устанавливаем кэширование на 300 секунд
-                # с текущей датой по ключу last-seen-id-пользователя
+                # Set cache for 300 seconds with the current timestamp
+                # using the key last-seen-id-user.
                 cache.set(cache_key, timezone.now(), 300)

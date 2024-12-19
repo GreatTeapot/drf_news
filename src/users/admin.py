@@ -12,23 +12,23 @@ from .models.users import User
 # region ----------------------------- INLINE ---------------------------------------
 class ProfileAdmin(admin.TabularInline):
     """
-    Встраиваемая модель профиля для UserAdmin.
-
-    Аттрибуты:
-        * `model` (Profile): модель профиля.
-        * `fields` (tuple[str]): поля.
-        * `readonly_fields` (tuple[str]): поля для чтения.
+    Embedded profile model for UserAdmin.
+    
+    Attributes:
+        * `model` (Profile): the profile model.
+        * `fields` (tuple[str]): fields.
+        * `readonly_fields` (tuple[str]): read-only fields.
     """
 
     model = Profile
     fields = ('photo', 'photo_show')
     readonly_fields = ('photo_show',)
 
-    @admin.display(description='Логотип', ordering='photo')
+    @admin.display(description='Photo', ordering='photo')
     def photo_show(self, obj: Profile) -> Union[SafeString, str]:
         if obj.photo:
             return mark_safe(f"<img src='{obj.photo.url}' width='60' />")
-        return 'Нет фотографии'
+        return 'No photo'
 
 
 # endregion -------------------------------------------------------------------------
@@ -38,25 +38,25 @@ class ProfileAdmin(admin.TabularInline):
 @admin.register(User)
 class UserAdmin(UserAdmin):
     """
-    Модель админа пользователя.
-
-    Аттрибуты:
-        * `change_user_password_template` (None): изменить шаблон пароля пользователя.
-        * `fieldsets` (tuple[tuple[...]]): наборы полей.
-        * `add_fieldsets` (tuple[tuple[...]]): добавление наборов полей.
-        * `list_display` (tuple[str]): отображение списка.
-        * `list_filter` (tuple[str]): фильтр списка.
-        * `search_fields` (tuple[str]): поле для поиска.
-        * `filter_horizontal` (tuple[str]): горизонтальная фильтрация.
-        * `readonly_fields` (tuple[str]): поле для чтения.
-        * `inlines` (tuple[ProfileAdmin]): встроенные.
+    User admin model.
+    
+    Attributes:
+        * `change_user_password_template` (None): change user password template.
+        * `fieldsets` (tuple[tuple[...]]): field groups.
+        * `add_fieldsets` (tuple[tuple[...]]): add field groups.
+        * `list_display` (tuple[str]): list display.
+        * `list_filter` (tuple[str]): list filter.
+        * `search_fields` (tuple[str]): search fields.
+        * `filter_horizontal` (tuple[str]): horizontal filter.
+        * `readonly_fields` (tuple[str]): read-only fields.
+        * `inlines` (tuple[ProfileAdmin]): inlines.
     """
     # region -------------- АТРИБУТЫ МОДЕЛИ АДМИНА ПОЛЬЗОВАТЕЛЯ ---------------------
     change_user_password_template = None
     fieldsets = (
         (None,
          {'fields': ('phone_number', 'email', 'username')}),
-        (_('Личная информация'),
+        (_('Personal information'),
          {'fields': ('first_name', 'last_name',)}),
         (_('Permissions'), {
             'fields': ('is_active',  'is_superuser',
