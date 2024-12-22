@@ -10,7 +10,7 @@ from users.jwt.tokens import add_tokens_to_response
 @extend_schema_view(
     post=extend_schema(
         summary='Token creation',
-        tags=['Аутентификация'],
+        tags=['Authentication'],
     ),
 )
 class CustomTokenObtainPairView(views.TokenObtainPairView):
@@ -29,7 +29,7 @@ class CustomTokenObtainPairView(views.TokenObtainPairView):
 @extend_schema_view(
     post=extend_schema(
         summary='Token refresh',
-        tags=['Аутентификация'],
+        tags=['Authentication'],
     ),
 )
 class CustomTokenRefreshView(views.TokenRefreshView):
@@ -40,7 +40,7 @@ class CustomTokenRefreshView(views.TokenRefreshView):
 @extend_schema_view(
     post=extend_schema(
         summary='Token verification',
-        tags=['Аутентификация'],
+        tags=['Authentication'],
     ),
 )
 class CustomTokenVerifyView(views.TokenVerifyView):

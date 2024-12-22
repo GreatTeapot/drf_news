@@ -1,3 +1,5 @@
+
+
 from typing import Optional
 
 from django.contrib.auth import get_user_model
@@ -9,12 +11,12 @@ User = get_user_model()
 
 class AuthBackend(object):
     """
-    Аутентификация серверной части.
-
-    Аттрибуты:
-        * `supports_object_permissions` (bool): поддерживает разрешения для объектов.
-        * `supports_anonymous_user` (bool): поддерживает анонимного пользователя.
-        * `supports_inactive_user` (bool): поддерживает неактивного пользователя.
+    Backend authentication.
+    
+    Attributes:
+        * `supports_object_permissions` (bool): supports object permissions.
+        * `supports_anonymous_user` (bool): supports anonymous users.
+        * `supports_inactive_user` (bool): supports inactive users.
     """
 
     supports_object_permissions = True
@@ -23,7 +25,7 @@ class AuthBackend(object):
 
     @staticmethod
     def get_user(user_id: int) -> Optional[User]:
-        """Получить пользователя по id."""
+        """Get user by ID."""
 
         try:
             return User.objects.get(pk=user_id)
@@ -36,7 +38,7 @@ class AuthBackend(object):
             username: str,
             password: str,
     ) -> Optional[User]:
-        """Проверка на один из выборов аутентификации и пароля"""
+        """Check one of the authentication choices and password."""
 
         try:
             user = User.objects.get(

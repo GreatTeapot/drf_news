@@ -47,7 +47,9 @@ Topics such as:
 
 ## 📌 **Future Improvements**
 
-- Add payment method(MasterCard using ACID)
+- Add payment method(MasterCard e.t.c)
+- unit tests
+- ssl, nginx configurations 
 
 
 
